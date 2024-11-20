@@ -1,16 +1,26 @@
 # capa de servicio/lógica de negocio
-
 from ..persistence import repositories
 from ..utilities import translator
 from django.contrib.auth import get_user
 
 def getAllImages(input=None):
     # obtiene un listado de datos "crudos" desde la API, usando a transport.py.
-    json_collection = []
-
+    json_collection = getAllImages(input) #NO ME SIRVE QUE ESTE VACIA, TENGO QUE VER COMO LA COMPLETO.. TRAIGO LAS IMAGENES DESDE LA FUNCION DEFINIDA EN TRANSPORT
     # recorre cada dato crudo de la colección anterior, lo convierte en una Card y lo agrega a images.
     images = []
 
+    for obj in json_collection:
+        try:
+            image_data = obj['image']  
+            card = {
+                'image': image_data,
+                'name': obj.get('name', 'Sin nombre'),  
+                'status': obj['status']
+            }
+            images.append(card)
+        except KeyError:
+            print("[services.py]: Error al procesar un objeto sin imagen.")
+            continue
     return images
 
 # añadir favoritos (usado desde el template 'home.html')
